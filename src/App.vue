@@ -1,10 +1,21 @@
 <template>
-  <nav>
-    <router-link to="/kakaologin">Kakao Login</router-link>
-  </nav>
-  <router-view/>
+  <div>
+    <Header></Header>
+    <router-view/>
+    <Footer></Footer>
+  </div>
 </template>
+<script>
+  import Header from './layout/Header';
+  import Footer from './layout/Footer';
 
+  export default {
+    components: { Header, Footer },
+    computed: {
+
+    }
+  }
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
