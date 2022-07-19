@@ -48,6 +48,9 @@
             <div class="col-auto">              
               <select class="form-select" v-model="cate1" @change="changeCate1">
                 <option :key="name" v-for="(value, name) of categoryObj">{{ name }}</option>
+                <!-- of: 열거형이 아닐 때(객체) -->
+                <!-- 카테고리1 선택하면 그 밑에 세부 카테고리가 나오기 때문에
+                     1은 객체, 나머지는 배열 -->
               </select>
             </div>
             
@@ -58,8 +61,9 @@
             </div>
 
             <div class="col-auto" v-if="cate2 !== ''">
-              <select class="form-select" v-model="selectedCateId">
+              <select class="form-select" v-model="product.category_id">
                 <option :value="cate.id" :key="cate.id" v-for="cate in categoryObj[cate1][cate2]">{{ cate.value }}</option>
+                <!-- in: 열거형일 때(반복 가능한 객체 -> 배열)(array, map, set, string, TypedArray) -->
               </select>
             </div>
             {{ selectedCateId }}
@@ -108,7 +112,7 @@ export default {
         add_delivery_price: 0,
         tags: '',
         outbound_days: 0,
-        category_id: 1,
+        category_id: '',
         seller_id: 1
       },      
       categoryObj: {},    
@@ -146,10 +150,10 @@ export default {
     },
     changeCate1() {
       this.cate2 = '';
-      this.selectedCateId = '';
+      this.product.category_id = '';
     },
     changeCate2() {
-      this.selectedCateId = '';
+      this.product.category_id = '';
     },
     productInsert() {
       if(this.product.product_name.trim() === '') {
@@ -171,6 +175,20 @@ export default {
         this.$refs.outbound_days.focus();
         return this.$swal('출고일을 입력하세요.');
       }
+
+      this.$swal.fire({
+        title: '등록 하시겠습니까?',
+        showCancelButton: true,
+        confirmButtonText: '등록',
+        cancelButtonText: '취소',
+      }).then(async result => {
+        if(result.isConfirmed) {
+          const res = this.$post('/api/productInsert', this.product);
+          console.log(res);
+          this.$swal.fire('저장되었습니다.', '', 'success');
+          this.$router.push( {path: '/sales'} );
+        }
+      })
 
     },
 
