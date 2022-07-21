@@ -67,9 +67,9 @@ export default {
     },
     async deleteProduct(productId, idx) {
       console.log(productId);
-      const res = await this.$delete(`/api/productDelete/${productId}`,{});
+      const res = await this.$delete(`/api/deleteProduct/${productId}`,{});
       if(res.result === 1) {
-        this.productList.remove(idx);
+        this.productList.splice(idx);
       }
     },
   },
